@@ -38,10 +38,6 @@ def get_ui_path() -> str:
     path = os.environ.get("S3GW_UI_PATH")
     if path is None:
         return "/"
-    match = re.fullmatch(r"/?[\w.-/]+(?:[\w]+)/?", path)
-    if match is None:
-        logger.error(f"Malformed path for UI: {path}")
-        raise Exception("Malformed UI path")
     return path if path.startswith("/") else f"/{path}"
 
 
@@ -67,7 +63,7 @@ class Config:
         self._s3gw_addr = get_s3gw_address()
         self._ui_path = get_ui_path()
         self._api_path = get_api_path(self._ui_path)
-        logger.info(f"Servicing s3gw at {self._s3gw_addr}")
+        logger.info(f"Serving s3gw at {self._s3gw_addr}{self._ui_path}")
 
     @property
     def s3gw_addr(self) -> str:
